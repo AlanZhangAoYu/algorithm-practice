@@ -5,8 +5,9 @@ import java.util.Random;
  * 排序算法学习
  */
 public class SortAlgorithm {
+    private static final Random random=new Random();
     public static void swap(int[] list,int i,int j){
-        if(list == null || list.length<2){
+        if(list == null || list.length < 2 || i < 0 || j >= list.length){
             System.out.println("数组不合法!");
             return;
         }
@@ -34,7 +35,6 @@ public class SortAlgorithm {
         if(list == null || list.length < 2){
             return;
         }
-        Random random=new Random();
         for(int i=0;i<list.length;i++){
             list[i]= random.nextInt(100);
         }
@@ -100,11 +100,11 @@ public class SortAlgorithm {
         int i = 0;
         int p1 = left;
         int p2 = mid + 1;
-        // 比较左右两部分的元素，哪个小，把那个元素填入temp中
+        // 比较左右两部分的元素，哪个小，把那个元素填入help中
         while (p1 <= mid && p2 <= right) {
             help[i++] = list[p1] < list[p2] ? list[p1++] : list[p2++];
         }
-        // 上面的循环退出后，把剩余的元素依次填入到temp中
+        // 上面的循环退出后，把剩余的元素依次填入到help中
         // 以下两个while只有一个会执行
         while (p1 <= mid) {
             help[i++] = list[p1++];
@@ -124,11 +124,39 @@ public class SortAlgorithm {
         }
         sort(list, 0, list.length - 1);
     }
+    public static void quickSort(int[] list,int left,int right){
+        //快速排序法
+        if(list == null || list.length < 2){
+            return;
+        }
+        swap(list,left+random.nextInt(list.length),right);
+        int[] p=partition(list,left,right);
+        quickSort(list,left,p[0]-1);
+        quickSort(list,p[1]+1,right);
+    }
+    public static int[] partition(int[] list, int left, int right){
+        if(list == null || list.length < 2){
+            return null;
+        }
+        int less=left - 1;
+        int more=right;
+        while (left < more){
+            if(list[left] < list[right]){
+                swap(list,++less,left++);
+            } else if (list[left] > list[right]) {
+                swap(list,--more,left);
+            } else {
+                left++;
+            }
+        }
+        swap(list,more,right);
+        return new int[] {less+1,more};
+    }
     public static void main(String[] args){
         int[] list = new int[10];
         createRandomList(list);
         printList(list);
-        mergeSort(list);
+        quickSort(list,1, list.length);
         printList(list);
     }
 }
