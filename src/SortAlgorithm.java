@@ -11,15 +11,24 @@ public class SortAlgorithm {
             System.out.println("数组不合法!");
             return;
         }
-        //异或操作,不格外开辟空间交换两个地址的值
         if(i == j){
             //如果要交换的地址相同,异或操作就会把两个数都变为0
             System.out.println("不能交换相同位置的数!");
         }else{
+            //异或操作,不格外开辟空间交换两个地址的值
             list[i] = list[i] ^ list[j];
             list[j] = list[i] ^ list[j];
             list[i] = list[i] ^ list[j];
         }
+    }
+    public static void swapNormal(int[] list,int i,int j){
+        if(list == null || list.length < 2 || i < 0 || j >= list.length){
+            System.out.println("数组不合法!");
+            return;
+        }
+        int temp=list[j];
+        list[j]=list[i];
+        list[i]=temp;
     }
     public static void printList(int[] list){
         if(list == null || list.length<2){
@@ -83,6 +92,10 @@ public class SortAlgorithm {
             }
         }
     }
+    /**
+     * 归并排序法
+     *
+     */
     private static void sort(int[] list, int left, int right) {
         if (left == right) {
             return;
@@ -118,14 +131,17 @@ public class SortAlgorithm {
         }
     }
     public static void mergeSort(int[] list){
-        //归并排序法
         if (list == null || list.length < 2) {
             return;
         }
         sort(list, 0, list.length - 1);
     }
+
+    /**
+     * 快速排序法
+     *
+     */
     public static void quickSort(int[] list,int left,int right){
-        //快速排序法
         if(list == null || list.length < 2){
             return;
         }
@@ -152,11 +168,63 @@ public class SortAlgorithm {
         swap(list,more,right);
         return new int[] {less+1,more};
     }
+
+    /**
+     * 堆排序
+     * 堆: 1. 一个完全二叉树 2. 某个结点的值总是不大于(小根堆)或不小于(大根堆)其父结点的值
+     * 二叉树: 当前节点list[index] 父节点list[(index-1)/2] 左孩子list[index*2+1] 右孩子list[index*2+2]
+     */
+    public static void heapInsert(int[] list, int index){
+        if(list == null || list.length < 2){
+            return;
+        }
+        //当前的list[index]与其父节点list[(index-1)/2]比较,若大于父节点,则与父结点交换,使整个数组构成大根堆
+        while(list[index] > list[(index-1)/2]){
+            swapNormal(list,index,(index-1)/2);
+            index=(index-1)/2;
+        }
+    }
+    public static void heapIfy(int[] list, int index, int heapSize){
+        if(list == null || list.length < 2){
+            return;
+        }
+        int leftChild = index*2+1,largest=0;
+        //当前的list[index]与其左右孩子中最大的一个比较,若小于那个,则与其交换,使整个数组组成大根堆
+        while (leftChild < heapSize){
+            largest = leftChild+1 < heapSize && list[leftChild + 1] > list[leftChild] ? leftChild + 1 : leftChild;
+            largest = list[index] > list[largest] ? index : largest;
+            if (largest == index){
+                break;
+            }
+            swapNormal(list,largest,index);
+            index = largest;
+            leftChild = index*2+1;
+        }
+    }
+    public static void heapSort(int[] list){
+        if(list == null || list.length < 2){
+            return;
+        }
+        int heapSize= list.length;
+        for(int i=0;i<list.length;i++){
+            heapInsert(list,i);
+        }
+        //printList(list);
+        swapNormal(list,0,heapSize-1);
+        heapSize--;
+        while (heapSize>0){
+            //System.out.print(heapSize+":");
+            //printList(list);
+            heapIfy(list,0,heapSize);
+            heapSize--;
+            swapNormal(list,0,heapSize);
+        }
+    }
     public static void main(String[] args){
         int[] list = new int[10];
         createRandomList(list);
         printList(list);
-        quickSort(list,1, list.length);
+        heapSort(list);
         printList(list);
     }
 }
