@@ -169,10 +169,14 @@ public class SortAlgorithm {
         return new int[] {less+1,more};
     }
 
+    /*
+      堆排序
+      堆: 1. 一个完全二叉树 2. 某个结点的值总是不大于(小根堆)或不小于(大根堆)其父结点的值
+      二叉树: 当前节点list[index] 父节点list[(index-1)/2] 左孩子list[index*2+1] 右孩子list[index*2+2]
+     */
     /**
-     * 堆排序
-     * 堆: 1. 一个完全二叉树 2. 某个结点的值总是不大于(小根堆)或不小于(大根堆)其父结点的值
-     * 二叉树: 当前节点list[index] 父节点list[(index-1)/2] 左孩子list[index*2+1] 右孩子list[index*2+2]
+     * @param list 要排序的数组
+     * @param index 当前要判断是否交换的元素的下标
      */
     public static void heapInsert(int[] list, int index){
         if(list == null || list.length < 2){
@@ -184,6 +188,12 @@ public class SortAlgorithm {
             index=(index-1)/2;
         }
     }
+
+    /**
+     * @param list 要排序的数组
+     * @param index 当前要判断是否交换的元素的下标
+     * @param heapSize 当前数组中形成堆的有效数组长度
+     */
     public static void heapIfy(int[] list, int index, int heapSize){
         if(list == null || list.length < 2){
             return;
@@ -220,11 +230,72 @@ public class SortAlgorithm {
             swapNormal(list,0,heapSize);
         }
     }
+
+    /*
+      以上排序算法统称为 比较排序, 因为在排序过程中有 list中两个数的大小比较过程
+      此外还有 基数排序 和 计数排序, 基于统计思想的排序, 但应用范围有限
+      桶排序
+     */
+
+    public static int mixBit(int[] list){
+        //返回数组list中最大值的位数
+        if(list == null || list.length < 2){
+            return 0;
+        }
+        int max=Integer.MIN_VALUE;
+        for (int i : list) {
+            max = Math.max(max, i);
+        }
+        int digit = 0;
+        while(max != 0){
+            digit++;
+            max = max / 10;
+        }
+        return digit;
+    }
+    /**
+     * 返回整数 num 的第 digit 位上的数
+     * @param num 要算的数
+     * @param digit 要取的位数
+     */
+    public static int getDigit(int num,int digit){
+        return ((num/((int)Math.pow(10,digit - 1))) % 10);
+    }
+    /**
+     * @param list 要排序的数组
+     * @param left 要排序的数组左边界
+     * @param right 要排序的数组右边界
+     * @param digit 要排序的数组中的最大值的位数
+     */
+    public static void bucketSort(int[] list,int left,int right,int digit){
+        int i=0,j=0;
+        int[] bucket = new int[right-left+1];
+        for(int d=1;d<=digit;d++){
+            int[] count = new int[10];
+            for(i=left;i<=right;i++){
+                j=getDigit(list[i],d);
+                count[j]++;
+            }
+            for(i=1;i < count.length;i++){
+                count[i]=count[i]+count[i-1];
+            }
+            for(i=right;i>=left;i--){
+                j=getDigit(list[i],d);
+                bucket[count[j]-1]=list[i];
+                count[j]--;
+            }
+            for(i=left,j=0;i<=right;i++,j++){
+                list[i]=bucket[j];
+            }
+        }
+    }
+
     public static void main(String[] args){
         int[] list = new int[10];
         createRandomList(list);
         printList(list);
-        heapSort(list);
+        //heapSort(list);
+        bucketSort(list,0,list.length-1,mixBit(list));
         printList(list);
     }
 }
