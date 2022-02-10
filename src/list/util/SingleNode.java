@@ -1,5 +1,7 @@
 package list.util;
 
+import java.util.Objects;
+
 /**
  * @author ZAY
  * 单链表节点类定义
@@ -25,5 +27,20 @@ public class SingleNode {
     }
     public void setNext(SingleNode next) {
         this.next = next;
+    }
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
+        SingleNode that = (SingleNode) o;
+        return data == that.data && Objects.equals(next, that.next);
+    }
+    @Override
+    public int hashCode() {
+        return Objects.hash(data, next);
     }
 }

@@ -1,8 +1,12 @@
 package list.util;
 
+import java.util.Stack;
 /**
  * @author ZAY
  * 二叉树的各种工具函数
+ * 注意理解二叉树的"递归序",理解了它，先序中序后序遍历都好理解; 当递归访问整个树时，每个节点实际上都访问了三次，先中后序遍历实际只是取递归序中分别在
+ *     第一次、第二次、第三次访问此节点的顺序
+ * 注意: 任何(注意是任何)递归函数都可以转换成等价的非递归函数
  */
 public class BinaryTreeUtils {
     public static void recursivePreorderTraversal(BinaryTreeNode root){
@@ -31,6 +35,37 @@ public class BinaryTreeUtils {
         recursivePostorderTraversal(root.getLeftChild());
         recursivePostorderTraversal(root.getRightChild());
         System.out.print(root.getData()+",");
+    }
+    public static void noRecursivePreorderTraversal(BinaryTreeNode root){
+        //非递归先序遍历
+        if(root == null){
+            return;
+        }
+        Stack<BinaryTreeNode> stack=new Stack<>();
+        stack.push(root);
+        BinaryTreeNode p;
+        while (!stack.empty()){
+            p = stack.pop();
+            System.out.print(p.getData()+",");
+            if(p.getRightChild() != null){
+                stack.push(p.getRightChild());
+            }
+            if(p.getLeftChild() != null){
+                stack.push(p.getLeftChild());
+            }
+        }
+    }
+    public static void noRecursiveMiddleOrderTraversal(BinaryTreeNode root){
+        //非递归中序遍历
+        if(root == null){
+            return;
+        }
+    }
+    public static void noRecursivePostorderTraversal(BinaryTreeNode root){
+        //非递归后序遍历
+        if(root == null){
+            return;
+        }
     }
     public static void main(String[] args){
         /*
@@ -66,5 +101,8 @@ public class BinaryTreeUtils {
         recursiveMiddleOrderTraversal(root);
         System.out.print("递归后序遍历:");
         recursivePostorderTraversal(root);
+        System.out.println("\n==================");
+        System.out.print("非递归先序遍历:");
+        noRecursivePreorderTraversal(root);
     }
 }

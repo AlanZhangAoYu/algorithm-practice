@@ -2,6 +2,8 @@ package list;
 
 import list.util.SingleListUtils;
 import list.util.SingleNode;
+import java.util.HashSet;
+import java.util.Set;
 
 /**
  * @author ZAY
@@ -12,6 +14,46 @@ import list.util.SingleNode;
  *         快慢指针再次重合时，都指向入环节点 (不知道为什么这样!!!不会证明!!记住!!)
  */
 public class JudgeWhetherTheSingleLinkedListHasRing {
+    public static SingleNode process1(SingleNode head){
+        //常规使用Set集合方法
+        if(head == null){
+            return null;
+        }
+        SingleNode p=head.getNext();
+        Set<SingleNode> set=new HashSet<>();
+        while (p.getNext() != null){
+            set.add(p);
+            if(!set.contains(p)){
+                return p;
+            }
+            p=p.getNext();
+        }
+        return null;
+    }
+    public static SingleNode process2(SingleNode head){
+        //快慢指针方法
+        if(head == null){
+            return null;
+        }
+        SingleNode fast=head.getNext();
+        SingleNode slow=head.getNext();
+        while (fast != null){
+            slow=slow.getNext();
+            fast=fast.getNext().getNext();
+            if(fast == slow){
+                //此时链表一定有环
+                fast=head.getNext();
+                while (fast.getNext() != null){
+                    fast=fast.getNext();
+                    slow=slow.getNext();
+                    if(fast==slow){
+                        return fast;
+                    }
+                }
+            }
+        }
+        return null;
+    }
     public static void main(String[] args){
         SingleNode head1=new SingleNode(0);
         for(int i=1;i<=10;i++){
@@ -32,5 +74,16 @@ public class JudgeWhetherTheSingleLinkedListHasRing {
             q=q.getNext();
         }
         p.setNext(q);
+
+        if(process2(head1) == null){
+            System.out.println("head1没有环");
+        }else{
+            System.out.println("head1有环，入环节点为:"+process2(head1).getData());
+        }
+        if(process2(head2) == null){
+            System.out.println("head2没有环");
+        }else{
+            System.out.println("head2有环，入环节点为:"+process2(head2).getData());
+        }
     }
 }
