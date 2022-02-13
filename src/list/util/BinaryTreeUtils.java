@@ -1,6 +1,9 @@
 package list.util;
 
 import java.util.Stack;
+import java.util.Queue;
+import java.util.LinkedList;
+
 /**
  * @author ZAY
  * 二叉树的各种工具函数
@@ -60,12 +63,106 @@ public class BinaryTreeUtils {
         if(root == null){
             return;
         }
+        Stack<BinaryTreeNode> stack=new Stack<>();
+        BinaryTreeNode p=root;
+        while (!stack.empty() || p != null){
+            if(p != null){
+                stack.push(p);
+                p=p.getLeftChild();
+            }else{
+                p= stack.pop();
+                System.out.print(p.getData()+",");
+                p=p.getRightChild();
+            }
+        }
     }
     public static void noRecursivePostorderTraversal(BinaryTreeNode root){
         //非递归后序遍历
         if(root == null){
             return;
         }
+        Stack<BinaryTreeNode> stack= new Stack<>();
+        Stack<BinaryTreeNode> resultStack= new Stack<>();
+        stack.push(root);
+        BinaryTreeNode p;
+        while(!stack.empty()){
+            p=stack.pop();
+            resultStack.push(p);
+            if(p.getLeftChild() != null){
+                stack.push(p.getLeftChild());
+            }
+            if(p.getRightChild() != null){
+                stack.push(p.getRightChild());
+            }
+        }
+        while (!resultStack.empty()){
+            p=resultStack.pop();
+            System.out.print(p.getData()+",");
+        }
+    }
+    public static void widthTraversal(BinaryTreeNode root){
+        //宽度遍历二叉树
+        if(root == null){
+            return;
+        }
+        Queue<BinaryTreeNode> queue=new LinkedList<>();
+        queue.offer(root);
+        BinaryTreeNode p;
+        while (!queue.isEmpty()){
+            p= queue.poll();
+            System.out.print(p.getData()+",");
+            if(p.getLeftChild() != null){
+                queue.offer(p.getLeftChild());
+            }
+            if(p.getRightChild() != null){
+                queue.offer(p.getRightChild());
+            }
+        }
+    }
+    public static int recursiveMaxDepth(BinaryTreeNode root){
+        //递归求二叉树最大深度
+        if(root == null){
+            return 0;
+        }else {
+            int leftHeight = recursiveMaxDepth(root.getLeftChild());
+            int rightHeight = recursiveMaxDepth(root.getRightChild());
+            return java.lang.Math.max(leftHeight, rightHeight) + 1;
+        }
+    }
+    public static int noRecursiveMaxDepth(BinaryTreeNode root){
+        //非递归求二叉树最大深度
+        if(root == null){
+            return 0;
+        }
+        return 1;
+    }
+    public static int maxWidth(BinaryTreeNode root){
+        //求二叉树最大宽度
+        if(root == null){
+            return 0;
+        }
+        Queue<BinaryTreeNode> queue=new LinkedList<>();
+        BinaryTreeNode p;
+        queue.offer(root);
+        int maxWidth=0,nowWidth=0;
+        while (!queue.isEmpty()){
+            if(nowWidth == 0){
+                nowWidth = queue.size();
+            }
+            maxWidth=Math.max(nowWidth,maxWidth);
+            while (nowWidth > 0){
+                p= queue.poll();
+                assert p != null;
+                if(p.getLeftChild() != null){
+                    queue.offer(p.getLeftChild());
+                }
+                if(p.getRightChild() != null){
+                    queue.offer(p.getRightChild());
+                }
+                nowWidth--;
+            }
+        }
+        return maxWidth;
     }
     public static void main(String[] args){
         /*
@@ -104,5 +201,15 @@ public class BinaryTreeUtils {
         System.out.println("\n==================");
         System.out.print("非递归先序遍历:");
         noRecursivePreorderTraversal(root);
+        System.out.print("非递归中序遍历:");
+        noRecursiveMiddleOrderTraversal(root);
+        System.out.print("非递归后序遍历:");
+        noRecursivePostorderTraversal(root);
+        System.out.println("\n==================");
+        System.out.print("宽度遍历二叉树:");
+        widthTraversal(root);
+        System.out.println("\n==================");
+        System.out.println("最大宽度:"+maxWidth(root));
+        System.out.println("递归求最大深度:"+recursiveMaxDepth(root));
     }
 }
