@@ -1,6 +1,9 @@
 package list;
 
 import list.util.BinaryTreeNode;
+import list.util.BinaryTreeUtils;
+
+import java.util.Scanner;
 
 /**
  * @author ZAY
@@ -55,16 +58,69 @@ public class SearchBinaryTree {
         if(root == null){
             return;
         }
+        if(BinaryTreeUtils.recursiveMaxDepth(root) <= 1){
+            root.setData(data);
+            return;
+        }
         if(get(root,data)==-0xffff){
             return;
         }
-        BinaryTreeNode newNode=new BinaryTreeNode(data);
+        //while循环完，parent指向要插入的位置的父节点; p指向要插入的位置(虽然为null)
         BinaryTreeNode p=root;
-        if(data<p.getData()){
-            p=p.getLeftChild();
+        BinaryTreeNode parent = null;
+        while (p != null){
+            parent=p;
+            if(data<p.getData()){
+                p=p.getLeftChild();
+            }else if(data > p.getData()) {
+                p = p.getRightChild();
+            }
+        }
+        p=new BinaryTreeNode(data);
+        if(parent.getData()<data){
+            parent.setLeftChild(p);
+        }else{
+            parent.setRightChild(p);
         }
     }
     public static void main(String[] args){
-
+        System.out.println("0--退出程序");
+        System.out.println("1--插入数据");
+        System.out.println("2--查询数据是否在二叉树内");
+        System.out.println("3--判断二叉树是否为排序二叉树");
+        System.out.println("4--删除数据");
+        System.out.println("5--中序遍历排序二叉树");
+        Scanner scanner=new Scanner(System.in);
+        BinaryTreeNode root =new BinaryTreeNode(0);
+        int choice=0;
+        while (true){
+            System.out.print("请输入功能代码:");
+            choice=scanner.nextInt();
+            if(choice == 1){
+                System.out.print("请输入要插入的数:");
+                int data= scanner.nextInt();
+                put(root,data);
+            }else if(choice == 2){
+                System.out.print("请输入要查询的数:");
+                int data= scanner.nextInt();
+                if(get(root,data)== -0xffff){
+                    System.out.println("二叉树中没有该数");
+                }else{
+                    System.out.println("二叉树中有该数");
+                }
+            }else if(choice == 3){
+                if(isSearchBinaryTree(root)){
+                    System.out.println("该二叉树是排序二叉树");
+                }else{
+                    System.out.println("该二叉树不是排序二叉树");
+                }
+            }else if(choice == 5){
+                BinaryTreeUtils.recursiveMiddleOrderTraversal(root);
+            }else if(choice == 0){
+                break;
+            }else{
+                System.out.println("没有此功能代码,请重新输入!");
+            }
+        }
     }
 }
