@@ -62,7 +62,7 @@ public class SearchBinaryTree {
             root.setData(data);
             return;
         }
-        if(get(root,data)==-0xffff){
+        if(get(root,data)==data){
             return;
         }
         //while循环完，parent指向要插入的位置的父节点; p指向要插入的位置(虽然为null)
@@ -116,6 +116,7 @@ public class SearchBinaryTree {
                 }
             }else if(choice == 5){
                 BinaryTreeUtils.recursiveMiddleOrderTraversal(root);
+                System.out.println();
             }else if(choice == 0){
                 break;
             }else{
