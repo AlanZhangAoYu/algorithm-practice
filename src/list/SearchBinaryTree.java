@@ -36,10 +36,32 @@ public class SearchBinaryTree {
         }
         return isSearchBinaryTree(root.getRightChild());
     }
-    public static int get(BinaryTreeNode root,int data){
-        //查找data是否存在于二叉树中，若存在，返回该数; 若不存在，返回 -0xffff
+    public static BinaryTreeNode getMinData(BinaryTreeNode root){
+        //获取排序二叉树最小节点
         if(root == null){
-            return -0xffff;
+            return null;
+        }
+        BinaryTreeNode p=root;
+        while (p.getLeftChild() != null){
+            p=p.getLeftChild();
+        }
+        return p;
+    }
+    public static BinaryTreeNode getMaxData(BinaryTreeNode root){
+        //获取排序二叉树最大节点
+        if(root == null){
+            return null;
+        }
+        BinaryTreeNode p=root;
+        while (p.getRightChild() != null){
+            p=p.getRightChild();
+        }
+        return p;
+    }
+    public static BinaryTreeNode get(BinaryTreeNode root,int data){
+        //查找数据data是否存在于二叉树中，若存在，返回该节点; 若不存在，返回null
+        if(root == null){
+            return null;
         }
         BinaryTreeNode p=root;
         while (p != null){
@@ -48,22 +70,19 @@ public class SearchBinaryTree {
             }else if(data > p.getData()){
                 p=p.getRightChild();
             }else{
-                return p.getData();
+                return p;
             }
         }
-        return -0xffff;
+        return null;
     }
-    public static void put(BinaryTreeNode root,int data){
+    public static BinaryTreeNode put(BinaryTreeNode root,int data){
         //输入数据构成排序二叉树
         if(root == null){
-            return;
+            root=new BinaryTreeNode(data);
+            return root;
         }
-        if(BinaryTreeUtils.recursiveMaxDepth(root) <= 1){
-            root.setData(data);
-            return;
-        }
-        if(get(root,data)==data){
-            return;
+        if(get(root,data) != null){
+            return root;
         }
         //while循环完，parent指向要插入的位置的父节点; p指向要插入的位置(虽然为null)
         BinaryTreeNode p=root;
@@ -71,16 +90,57 @@ public class SearchBinaryTree {
         while (p != null){
             parent=p;
             if(data<p.getData()){
-                p=p.getLeftChild();
-            }else if(data > p.getData()) {
+                p = p.getLeftChild();
+            }else{
                 p = p.getRightChild();
             }
         }
         p=new BinaryTreeNode(data);
-        if(parent.getData()<data){
+        if(data< parent.getData()){
             parent.setLeftChild(p);
         }else{
             parent.setRightChild(p);
+        }
+        return root;
+    }
+    public static void remove(BinaryTreeNode root,int data){
+        /*
+          从二叉树中删除数据data
+          对于二叉排序树中的节点A，对它的删除分为三种情况:
+          1、如果A只有一个子节点，就直接将A的子节点连至A的父节点上，并将A删除;
+          2、如果A有两个子节点，我们就以右子树内的最小节点取代A
+          3、如果A没有子节点，直接将A删除
+         */
+        if(root == null){
+            return;
+        }
+        if(get(root, data)==null){
+            System.out.println("二叉树中没有该数!");
+            return;
+        }
+        //p为要删除的节点, parent为要删除的节点的父节点
+        BinaryTreeNode p=get(root,data);
+        BinaryTreeNode parent=root;
+        while (parent.getLeftChild()!=p && parent.getRightChild()!=p){
+            if(p.getData() < parent.getData()){
+                parent=parent.getLeftChild();
+            }else {
+                parent=parent.getRightChild();
+            }
+        }
+        if(p.getLeftChild() == null && p.getRightChild() == null){
+            //p没有子节点
+            if(parent.getLeftChild() == p){
+                parent.setLeftChild(null);
+            }else{
+                parent.setRightChild(null);
+            }
+        }
+        if(p.getLeftChild() != null && p.getRightChild() != null){
+            //p有两个子节点
+            //min为p为根的子树上的最小节点
+            BinaryTreeNode min=getMinData(p);
+            p.setData(min.getData());
         }
     }
     public static void main(String[] args){
@@ -90,20 +150,22 @@ public class SearchBinaryTree {
         System.out.println("3--判断二叉树是否为排序二叉树");
         System.out.println("4--删除数据");
         System.out.println("5--中序遍历排序二叉树");
+        System.out.println("6--获取最小节点");
+        System.out.println("7--获取最大节点");
+        BinaryTreeNode root = null;
         Scanner scanner=new Scanner(System.in);
-        BinaryTreeNode root =new BinaryTreeNode(0);
-        int choice=0;
+        int choice;
         while (true){
             System.out.print("请输入功能代码:");
             choice=scanner.nextInt();
             if(choice == 1){
                 System.out.print("请输入要插入的数:");
                 int data= scanner.nextInt();
-                put(root,data);
+                root=put(root,data);
             }else if(choice == 2){
                 System.out.print("请输入要查询的数:");
                 int data= scanner.nextInt();
-                if(get(root,data)== -0xffff){
+                if(get(root,data)== null){
                     System.out.println("二叉树中没有该数");
                 }else{
                     System.out.println("二叉树中有该数");
@@ -117,6 +179,10 @@ public class SearchBinaryTree {
             }else if(choice == 5){
                 BinaryTreeUtils.recursiveMiddleOrderTraversal(root);
                 System.out.println();
+            }else if(choice == 6){
+                System.out.println("最小值为:"+getMinData(root).getData());
+            }else if(choice == 7){
+                System.out.println("最大值为:"+getMaxData(root).getData());
             }else if(choice == 0){
                 break;
             }else{
