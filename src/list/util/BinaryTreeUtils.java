@@ -1,5 +1,6 @@
 package list.util;
 
+import java.util.ArrayList;
 import java.util.Stack;
 import java.util.Queue;
 import java.util.LinkedList;
@@ -164,6 +165,77 @@ public class BinaryTreeUtils {
         }
         return maxWidth;
     }
+    public static boolean isCompleteBinaryTree(BinaryTreeNode root){
+        /*
+          判断一个二叉树是不是完全二叉树
+          完全二叉树:
+          一棵深度为k的有n个结点的二叉树，对树中的结点按从上至下、从左到右的顺序进行编号，如果编号为i(1≤i≤n)的结点与满二叉树中编号为i的
+          结点在二叉树中的位置相同，则这棵二叉树称为完全二叉树
+          遍历二叉树所有节点，只要存在一个有右孩子没有左孩子的节点，就不是完全二叉树，否则是完全二叉树
+         */
+        if(root == null){
+            return false;
+        }
+        Stack<BinaryTreeNode> stack=new Stack<>();
+        ArrayList<BinaryTreeNode> nodeList=new ArrayList<>();
+        stack.push(root);
+        BinaryTreeNode p;
+        while (!stack.empty()){
+            p = stack.pop();
+            nodeList.add(p);
+            if(p.getRightChild() != null){
+                stack.push(p.getRightChild());
+            }
+            if(p.getLeftChild() != null){
+                stack.push(p.getLeftChild());
+            }
+        }
+        for (BinaryTreeNode node:nodeList) {
+            if(node.getRightChild() != null && node.getLeftChild() == null){
+                return false;
+            }
+        }
+        return true;
+    }
+    public static boolean isBalancedBinaryTree(BinaryTreeNode root){
+        /*
+          判断一个二叉树是不是平衡二叉树
+          平衡二叉树: 任一节点对应的左右子树的高度差小于等于1
+          二叉树所有子树都为平衡二叉树，此二叉树为平衡二叉树
+         */
+        if(root == null){
+            return true;
+        }
+        if(Math.abs(recursiveMaxDepth(root)-recursiveMaxDepth(root)) <= 1){
+            return true;
+        }
+        return isBalancedBinaryTree(root.getLeftChild()) && isBalancedBinaryTree(root.getRightChild());
+        /*
+          递归次数少的版本，但难理解:
+          从根节点开始，从上往下遍历，按照中序遍历的思想，从左右子节点向根节点遍历，一依次判断平衡状态，这样根结点可以重复利用已经计算的子节点的
+          高度，只需要依次遍历整棵树。在遇到某个子树非平衡时，能直接结束，返回false
+          public boolean isBalanced(TreeNode root) {
+                if(root == null){
+                    return true;
+                }
+                return getHeight(root) != -1;
+          }
+          public int getHeight(TreeNode root){
+              if(root == null){
+                  return 0;
+              }
+              int left = getHeight(root.getLeftChild());
+              int right = getHeight(root.getRightChild());
+              if(left == -1){
+                  return -1;
+              }
+              if(right == -1){
+                  return -1;
+              }
+              return Math.abs(left - right) > 1 ? -1 : Math.max(left,right)+1;
+          }
+         */
+    }
     public static void main(String[] args){
         /*
           构造一个二叉树:
@@ -211,5 +283,8 @@ public class BinaryTreeUtils {
         System.out.println("\n==================");
         System.out.println("最大宽度:"+maxWidth(root));
         System.out.println("递归求最大深度:"+recursiveMaxDepth(root));
+        System.out.println("====================");
+        System.out.println("是否为完全二叉树:"+isCompleteBinaryTree(root));
+        System.out.println("是否为平衡二叉树:"+isBalancedBinaryTree(root));
     }
 }
