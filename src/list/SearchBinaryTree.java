@@ -103,7 +103,7 @@ public class SearchBinaryTree {
         }
         return root;
     }
-    public static void remove(BinaryTreeNode root,int data){
+    public static BinaryTreeNode remove(BinaryTreeNode root,int data){
         /*
           从二叉树中删除数据data
           对于二叉排序树中的节点A，对它的删除分为三种情况:
@@ -112,36 +112,36 @@ public class SearchBinaryTree {
           3、如果A没有子节点，直接将A删除
          */
         if(root == null){
-            return;
+            return null;
         }
         if(get(root, data)==null){
             System.out.println("二叉树中没有该数!");
-            return;
+            return null;
         }
-        //p为要删除的节点, parent为要删除的节点的父节点
-        BinaryTreeNode p=get(root,data);
-        BinaryTreeNode parent=root;
-        while (parent.getLeftChild()!=p && parent.getRightChild()!=p){
-            if(p.getData() < parent.getData()){
-                parent=parent.getLeftChild();
+        if(data < root.getData()){
+            root.setLeftChild(remove(root.getLeftChild(),data));
+        }else if(data > root.getData()){
+            root.setRightChild(remove(root.getRightChild(),data));
+        }else{
+            if(root.getLeftChild() != null && root.getRightChild() != null){
+                //左右子节点均不为空
+                root.setData(getMinData(root).getData());
+                root.setRightChild(remove(root.getRightChild(), root.getData()));
             }else {
-                parent=parent.getRightChild();
+                if(root.getLeftChild() == null && root.getRightChild() == null){
+                    //左右节点均为空
+                    root=null;
+                }else if(root.getLeftChild() != null){
+                    //左节点不为空，右节点为空
+                    root=root.getLeftChild();
+                }else if(root.getRightChild() != null){
+                    //右节点为空，左节点不为空
+                    root=root.getRightChild();
+                }
+                return root;
             }
         }
-        if(p.getLeftChild() == null && p.getRightChild() == null){
-            //p没有子节点
-            if(parent.getLeftChild() == p){
-                parent.setLeftChild(null);
-            }else{
-                parent.setRightChild(null);
-            }
-        }
-        if(p.getLeftChild() != null && p.getRightChild() != null){
-            //p有两个子节点
-            //min为p为根的子树上的最小节点
-            BinaryTreeNode min=getMinData(p);
-            p.setData(min.getData());
-        }
+        return root;
     }
     public static void main(String[] args){
         System.out.println("0--退出程序");
@@ -176,6 +176,10 @@ public class SearchBinaryTree {
                 }else{
                     System.out.println("该二叉树不是排序二叉树");
                 }
+            }else if(choice == 4){
+                System.out.print("请输入要删除的数:");
+                int data= scanner.nextInt();
+                remove(root,data);
             }else if(choice == 5){
                 BinaryTreeUtils.recursiveMiddleOrderTraversal(root);
                 System.out.println();
