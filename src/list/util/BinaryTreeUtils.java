@@ -236,6 +236,40 @@ public class BinaryTreeUtils {
           }
          */
     }
+    public static String binaryTreeSerialization(BinaryTreeNode node){
+        //二叉树的序列化(转换成唯一对应的字符串) null记为# 节点值记为对应值 节点结束符为_
+        StringBuilder string=new StringBuilder();
+        if(node == null){
+            return new String(string.append("#_"));
+        }
+        string.append(node.getData()).append("_");
+        string.append(binaryTreeSerialization(node.getLeftChild()));
+        string.append(binaryTreeSerialization(node.getRightChild()));
+        return new String(string);
+    }
+    public static BinaryTreeNode binaryTreeDeserialization(String str){
+        //二叉树的反序列化(由字符串生成对应的二叉树)
+        String[] strings=str.split("_");
+        Queue<String> queue=new LinkedList<>();
+        for (String string : strings) {
+            queue.offer(string);
+        }
+        return deserializationProcess(queue);
+    }
+    public static BinaryTreeNode deserializationProcess(Queue<String> queue){
+        //反序列化的递归过程
+        if(queue == null){
+            return null;
+        }
+        String value= queue.poll();
+        if("#".equals(value)){
+            return null;
+        }
+        BinaryTreeNode node=new BinaryTreeNode(Integer.parseInt(value));
+        node.setLeftChild(deserializationProcess(queue));
+        node.setRightChild(deserializationProcess(queue));
+        return node;
+    }
     public static void main(String[] args){
         /*
           构造一个二叉树:
@@ -286,5 +320,7 @@ public class BinaryTreeUtils {
         System.out.println("====================");
         System.out.println("是否为完全二叉树:"+isCompleteBinaryTree(root));
         System.out.println("是否为平衡二叉树:"+isBalancedBinaryTree(root));
+        System.out.println("====================");
+        System.out.println("序列化:"+binaryTreeSerialization(root));
     }
 }
