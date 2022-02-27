@@ -214,27 +214,27 @@ public class BinaryTreeUtils {
           递归次数少的版本，但难理解:
           从根节点开始，从上往下遍历，按照中序遍历的思想，从左右子节点向根节点遍历，一依次判断平衡状态，这样根结点可以重复利用已经计算的子节点的
           高度，只需要依次遍历整棵树。在遇到某个子树非平衡时，能直接结束，返回false
-          public boolean isBalanced(TreeNode root) {
-                if(root == null){
-                    return true;
-                }
-                return getHeight(root) != -1;
-          }
-          public int getHeight(TreeNode root){
+        public boolean isBalanced(TreeNode root) {
               if(root == null){
-                  return 0;
+                  return true;
               }
-              int left = getHeight(root.getLeftChild());
-              int right = getHeight(root.getRightChild());
-              if(left == -1){
-                  return -1;
-              }
-              if(right == -1){
-                  return -1;
-              }
-              return Math.abs(left - right) > 1 ? -1 : Math.max(left,right)+1;
-          }
-         */
+              return getHeight(root) != -1;
+        }
+        public int getHeight(TreeNode root){
+            if(root == null){
+                return 0;
+            }
+            int left = getHeight(root.getLeftChild());
+            int right = getHeight(root.getRightChild());
+            if(left == -1){
+                return -1;
+            }
+            if(right == -1){
+                return -1;
+            }
+            return Math.abs(left - right) > 1 ? -1 : Math.max(left,right)+1;
+        }
+       */
     }
     public static String binaryTreeSerialization(BinaryTreeNode node){
         //二叉树的序列化(转换成唯一对应的字符串) null记为# 节点值记为对应值 节点结束符为_
