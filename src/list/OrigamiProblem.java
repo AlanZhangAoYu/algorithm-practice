@@ -2,11 +2,9 @@ package list;
 
 import list.util.BinaryTreeNode;
 import list.util.BinaryTreeUtils;
-
 import java.util.LinkedList;
 import java.util.Queue;
 import java.util.Scanner;
-import java.util.Stack;
 
 /**
  * @author ZAY
@@ -55,7 +53,7 @@ public class OrigamiProblem {
         node.setRightChild(new BinaryTreeNode(2));
         return node;
     }
-    /*
+    /**
     当前你来了一个节点，脑海中想象的！
     这个节点在第i层，一共有N层，N固定不变的
     这个节点如果是凹的话，down = T
