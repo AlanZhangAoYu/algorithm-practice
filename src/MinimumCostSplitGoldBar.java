@@ -1,5 +1,4 @@
 import java.util.PriorityQueue;
-
 /**
  * @author ZAY
  * 最小代价分割金条
