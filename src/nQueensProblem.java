@@ -6,7 +6,7 @@ import java.util.Scanner;
  * 在 N*N 的棋盘上要摆放N个皇后，要求任意两个皇后不同行，不同列，也不在同一个斜线上
  * 给定一个整数N,返回N皇后的摆法有几种
  */
-public class NQueueProblem {
+public class nQueensProblem {
     private static int result = 0;
     public static void initCheckerboard(int[][] checkerboard){
         //初始化棋盘，没有棋子时为0，有棋子时为1
