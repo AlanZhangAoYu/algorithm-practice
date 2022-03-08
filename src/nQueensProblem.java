@@ -5,9 +5,9 @@ import java.util.Scanner;
  * N皇后问题
  * 在 N*N 的棋盘上要摆放N个皇后，要求任意两个皇后不同行，不同列，也不在同一个斜线上
  * 给定一个整数N,返回N皇后的摆法有几种
- * 参考: https://blog.csdn.net/piyongduo3393/article/details/86497081
  */
 public class NQueueProblem {
+    private static int result = 0;
     public static void initCheckerboard(int[][] checkerboard){
         //初始化棋盘，没有棋子时为0，有棋子时为1
         if(checkerboard == null){
@@ -47,18 +47,17 @@ public class NQueueProblem {
         }
         return true;
     }
-    public static boolean process(int[][] checkerboard,int n,int row){
-        //从当前行往下是否能生成结果 true能 false不能
+    public static void process(int[][] checkerboard,int n,int row){
         if(row == n){
-            return true;
+            result++;
+            print(checkerboard);
         }else{
             for(int i=0;i<n;i++){
                 int[] location={row,i};
                 if(canPut(checkerboard,location,n)){
                     checkerboard[row][i] = 1;
                     process(checkerboard,n,row+1);
-                }else{
-                    return false;
+                    checkerboard[row][i] = 0;
                 }
             }
         }
@@ -70,5 +69,6 @@ public class NQueueProblem {
         int[][] checkerboard=new int[n][n];
         initCheckerboard(checkerboard);
         process(checkerboard,n,0);
+        System.out.println("result:"+result);
     }
 }
