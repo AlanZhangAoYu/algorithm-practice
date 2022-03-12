@@ -50,7 +50,7 @@ class HashMap<K,V> {
         }
         Node<K,V> node=new Node<>(k,v);
         //求出node要存放在hashList中的数组下标location
-        int location=hash(node.getKey()) % hashList.length;
+        int location=Math.abs(hash(node.getKey()) % hashList.length);
         if(hashList[location] != null){
             Node<K,V> p=hashList[location];
             int size=0;
@@ -67,17 +67,18 @@ class HashMap<K,V> {
         }
     }
     public V get(K k) {
-        int location = hash(k) % hashList.length;
-        if(hashList[location] == null){
+        int location = Math.abs(hash(k) % hashList.length);
+        if(hashList[location] == null) {
             return null;
-        }else if(hashList[location].getNext() == null){
-            return hashList[location].getValue();
         }else{
             Node<K,V> p=hashList[location];
-            if(p.getKey() != k){
+            while (p.getNext() != null){
+                if(p.getKey() == k){
+                    return p.getValue();
+                }
                 p=p.getNext();
             }
-            return p.getValue();
+            return null;
         }
     }
     public void expansion(){
@@ -98,11 +99,11 @@ class HashMap<K,V> {
             if (p == null) {
                 continue;
             } else if (p.getNext() == null) {
-                location = hash(p) % DEFAULT_INIT_LENGTH;
+                location = Math.abs(hash(p) % DEFAULT_INIT_LENGTH);
                 newHashList[location] = p;
             } else {
                 while (p.getNext() != null) {
-                    location = hash(p) % DEFAULT_INIT_LENGTH;
+                    location = Math.abs(hash(p) % DEFAULT_INIT_LENGTH);
                     newHashList[location] = p;
                     p = p.getNext();
                 }
@@ -123,12 +124,10 @@ class HashMap<K,V> {
 public class MyHashMapTest {
     public static void main(String[] args){
         HashMap<Integer,String> hashMap=new HashMap<>();
-        hashMap.put(4,"HAHA");
-        hashMap.put(9,"JUJU");
-        hashMap.put(6,"BUHP");
-        hashMap.put(4,"LUht");
-        System.out.println(hashMap.get(4));
-        System.out.println(hashMap.get(9));
-        System.out.println(hashMap.get(3));
+        for(int i=0;i<100;i++){
+            hashMap.put(i,"数据"+i);
+        }
+        //System.out.println(hashMap.hash(22)% 16+" "+ hashMap.hash(66)%16);
+        System.out.println(hashMap.get(45));
     }
 }
