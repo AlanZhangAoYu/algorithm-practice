@@ -1,5 +1,7 @@
 package LeetcodeAlgorithmProblem;
 
+import java.util.Stack;
+
 /**
  * @author ZAY
  * 2.两数相加
@@ -18,29 +20,68 @@ class ListNode {
  * @author ZAY
  */
 public class TwoNumListSum {
-    public ListNode addTwoNumbers(ListNode l1, ListNode l2) {
+    public static ListNode addTwoNumbers(ListNode l1, ListNode l2) {
         ListNode result=null;
         ListNode p1=l1;
         ListNode p2=l2;
-        while ( p1.next !=null && p2.next != null){
-            ListNode newNum = null;
-            if(p1.val+p2.val>9 || (p1.val+ p2.val) % 10 + 1 ==10){
-                newNum=new ListNode((p1.val + p2.val) % 10,null);
+        ListNode p3=result;
+        int jinwei=0;
+        while (p1 != null && p2 != null){
+            if(p3 == null){
+                result=new ListNode(((p1.val+p2.val)%10+jinwei)%10,null);
+                p3=result;
             }else {
-                newNum=new ListNode((p1.val+ p2.val)%10,null);
+                p3.next=new ListNode(((p1.val+p2.val)%10+jinwei)%10,null);
+                p3=p3.next;
+            }
+            if(p1.val+ p2.val+jinwei > 9){
+                jinwei=1;
+            }else {
+                jinwei=0;
             }
             p1=p1.next;
             p2=p2.next;
         }
-        //以下两个while只会执行一个
-        while (p1.next != null){
-
+        //以下两个while只会执行一个,或者都不执行
+        while (p1 != null){
+            p3.next=new ListNode(((p1.val % 10)+jinwei)%10);
+            if(p1.val%10+jinwei > 9){
+                jinwei=1;
+            }else {
+                jinwei=0;
+            }
+            p3=p3.next;
+            p1=p1.next;
         }
-        while(p2.next != null){
-
+        while (p2 != null){
+            p3.next=new ListNode(((p2.val % 10)+jinwei)%10);
+            if(p2.val%10+jinwei > 9){
+                jinwei=1;
+            }else {
+                jinwei=0;
+            }
+            p3=p3.next;
+            p2=p2.next;
+        }
+        if(jinwei != 0){
+            p3.next=new ListNode(1,null);
         }
         return result;
     }
     public static void main(String[] args){
+        ListNode l1=new ListNode(1,null);
+        ListNode l2=new ListNode(2,null);
+        ListNode l3=new ListNode(3,null);
+        ListNode l4=new ListNode(1,null);
+        ListNode l5=new ListNode(2,null);
+        l1.next=l2;
+        l2.next=l3;
+        l4.next=l5;
+        ListNode result = addTwoNumbers(l1,l4);
+        ListNode p=result;
+        while (p != null){
+            System.out.print(p.val+",");
+            p=p.next;
+        }
     }
 }
