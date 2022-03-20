@@ -26,18 +26,21 @@ public class MyApplicationContext {
             URL resource = classLoader.getResource(path);
             File file = new File(resource.getFile());
             //System.out.println(file);
-            if(!file.isDirectory()){
+            if(file.isDirectory()){
                 //读取到包所对应的目录，将目录下每一个文件列一个表files
                 File[] files=file.listFiles();
                 for (File f : files) {
-                    //将对应目录下的.class文件筛选出来
                     String fileAbsolutePath = f.getAbsolutePath();
                     if(fileAbsolutePath.endsWith(".class")){
-                        //判断这个class文件(这个类)是不是Bean(是否被@Component注解)
-                        System.out.println(fileAbsolutePath);
+                        //将对应目录下的.class文件筛选出来
+                        //System.out.println(fileAbsolutePath);
+                        String myHandwrittenSpring = fileAbsolutePath.substring(fileAbsolutePath.indexOf("MyHandwrittenSpring"), fileAbsolutePath.indexOf(".class"));
+                        myHandwrittenSpring = myHandwrittenSpring.replace('\\', '.');
                         try {
-                            Class<?> aClass = classLoader.loadClass("");
+                            //传入的参数格式必须为xxx.xxx.xxx,所以要经过一次转换
+                            Class<?> aClass = classLoader.loadClass(myHandwrittenSpring);
                             if (aClass.isAnnotationPresent(Component.class)) {
+                                //判断这个class文件(这个类)是不是Bean(是否被@Component注解)
 
                             }
                         } catch (ClassNotFoundException e) {
