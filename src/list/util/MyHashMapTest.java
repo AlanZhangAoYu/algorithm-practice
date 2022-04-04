@@ -1,6 +1,8 @@
+package list.util;
+
 /**
  * @author ZAY
- * 手写 HashMap(JDK1.7)
+ * 手写 list.util.HashMap(JDK1.7)
  * JDK1.7: 数组+链表
  * JDK1.8: 数组+链表+红黑树
  */
@@ -68,18 +70,16 @@ class HashMap<K,V> {
     }
     public V get(K k) {
         int location = Math.abs(hash(k) % hashList.length);
-        if(hashList[location] == null) {
-            return null;
-        }else{
-            Node<K,V> p=hashList[location];
-            while (p.getNext() != null){
-                if(p.getKey() == k){
+        if (hashList[location] != null) {
+            Node<K, V> p = hashList[location];
+            while (p.getNext() != null) {
+                if (p.getKey() == k) {
                     return p.getValue();
                 }
-                p=p.getNext();
+                p = p.getNext();
             }
-            return null;
         }
+        return null;
     }
     public void expansion(){
         /*
