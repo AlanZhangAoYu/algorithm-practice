@@ -52,7 +52,7 @@ class HashMap<K,V> {
         }
         Node<K,V> node=new Node<>(k,v);
         //求出node要存放在hashList中的数组下标location
-        int location=Math.abs(hash(node.getKey()) % hashList.length);
+        int location=(DEFAULT_INIT_LENGTH - 1) & hash(k);
         if(hashList[location] != null){
             Node<K,V> p=hashList[location];
             int size=0;
@@ -62,18 +62,19 @@ class HashMap<K,V> {
             }
             p.setNext(node);
             if(size >= MAX_NODE_LENGTH){
-                expansion();
+                this.hashList = expansion();
             }
         }else {
             hashList[location]=node;
         }
     }
     public V get(K k) {
-        int location = Math.abs(hash(k) % hashList.length);
+        int location = (DEFAULT_INIT_LENGTH - 1) & hash(k);
         if (hashList[location] != null) {
             Node<K, V> p = hashList[location];
             while (p.getNext() != null) {
-                if (p.getKey() == k) {
+                //注意这里等号 == 与 equals() 的区别!!!!!!!
+                if (k.equals(p.getKey())) {
                     return p.getValue();
                 }
                 p = p.getNext();
@@ -81,7 +82,7 @@ class HashMap<K,V> {
         }
         return null;
     }
-    public void expansion(){
+    public Node<K,V>[] expansion(){
         /*
           扩容,生成新的hashList,是之前的2倍(DEFAULT_INIT_LENGTH * 2)
           JDK1.7 是先扩容,在添加。具体put是否扩容需要两个条件:
@@ -91,26 +92,43 @@ class HashMap<K,V> {
             当table中存储值的个数大于等于threshold的时候，进行扩容。容量为原来的2倍
             红黑树转化条件: 数组的长度大于64的时候，链表长度大于8才会从链表转换为红黑树
          */
-        DEFAULT_INIT_LENGTH = DEFAULT_INIT_LENGTH << 1;
-        Node<K,V>[] newHashList=new Node[DEFAULT_INIT_LENGTH];
+        HashMap.DEFAULT_INIT_LENGTH = HashMap.DEFAULT_INIT_LENGTH << 1;
+        Node<K,V>[] newHashList=new Node[HashMap.DEFAULT_INIT_LENGTH];
         int location;
         for (Node<K, V> kvNode : hashList) {
             Node<K, V> p = kvNode;
             if (p == null) {
                 continue;
             } else if (p.getNext() == null) {
-                location = Math.abs(hash(p) % DEFAULT_INIT_LENGTH);
-                newHashList[location] = p;
+                location = (DEFAULT_INIT_LENGTH - 1) & hash(p.getKey());
+                Node<K,V> node=newHashList[location];
+                if(newHashList[location] == null){
+                    newHashList[location] = new Node<>(p.getKey(),p.getValue());
+                }else{
+                    while (node.getNext() != null){
+                        node=node.getNext();
+                    }
+                    node.setNext(new Node<>(p.getKey(),p.getValue()));
+                }
             } else {
                 while (p.getNext() != null) {
-                    location = Math.abs(hash(p) % DEFAULT_INIT_LENGTH);
-                    newHashList[location] = p;
+                    location = (DEFAULT_INIT_LENGTH - 1) & hash(p.getKey());
+                    Node<K,V> node=newHashList[location];
+                    if(node == null){
+                        newHashList[location] = new Node<>(p.getKey(),p.getValue());
+                    }else{
+                        while (node.getNext() != null){
+                            node=node.getNext();
+                        }
+                        node.setNext(new Node<>(p.getKey(),p.getValue()));
+                    }
                     p = p.getNext();
                 }
             }
         }
-        hashList=newHashList;
+        System.out.println("扩容完成");
         System.gc();
+        return newHashList;
     }
     public int hash(Object key){
         int h;
@@ -124,10 +142,10 @@ class HashMap<K,V> {
 public class MyHashMapTest {
     public static void main(String[] args){
         HashMap<Integer,String> hashMap=new HashMap<>();
-        for(int i=0;i<100;i++){
+        for(int i=0;i<500;i++){
             hashMap.put(i,"数据"+i);
         }
-        //System.out.println(hashMap.hash(22)% 16+" "+ hashMap.hash(66)%16);
-        System.out.println(hashMap.get(45));
+        //此程序还有问题，每次扩容hashMap中会缺失一些数据????比如 333 不存在于此时的map中
+        System.out.println(hashMap.get(333));
     }
 }
