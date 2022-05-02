@@ -1,6 +1,6 @@
 package list;
 
-import list.util.BinaryTreeNode;
+import list.util.BinaryTree.BinaryTreeNode;
 import java.util.HashMap;
 import java.util.HashSet;
 

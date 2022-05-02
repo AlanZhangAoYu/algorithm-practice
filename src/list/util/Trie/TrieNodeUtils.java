@@ -1,4 +1,4 @@
-package list.util;
+package list.util.Trie;
 
 /**
  * @author ZAY

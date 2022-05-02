@@ -1,4 +1,4 @@
-package list.util;
+package list.util.BinaryTree;
 
 import java.util.ArrayList;
 import java.util.Stack;

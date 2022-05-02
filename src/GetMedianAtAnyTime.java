@@ -1,5 +1,5 @@
-import list.util.SingleListUtils;
-import list.util.SingleNode;
+import list.util.SingleList.SingleListUtils;
+import list.util.SingleList.SingleNode;
 
 import java.util.Comparator;
 import java.util.PriorityQueue;

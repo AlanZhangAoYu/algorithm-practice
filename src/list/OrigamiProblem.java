@@ -1,7 +1,7 @@
 package list;
 
-import list.util.BinaryTreeNode;
-import list.util.BinaryTreeUtils;
+import list.util.BinaryTree.BinaryTreeNode;
+import list.util.BinaryTree.BinaryTreeUtils;
 import java.util.LinkedList;
 import java.util.Queue;
 import java.util.Scanner;

@@ -1,4 +1,4 @@
-package list.util;
+package list.util.SingleList;
 
 import java.util.Objects;
 
