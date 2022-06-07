@@ -68,7 +68,7 @@ public class SnowflakeIdWorker {
      */
     public synchronized long nextId() {
         long timestamp = timeGen();
-        //如果当前时间小于上一次ID生成的时间戳，说明系统时钟回退过这个时候应当抛出异常
+        //如果当前时间小于上一次ID生成的时间戳，说明系统时钟回退过,这个时候应当抛出异常
         if (timestamp < lastTimestamp) {
             throw new RuntimeException(
                     String.format("Clock moved backwards.  Refusing to generate id for %d milliseconds", lastTimestamp - timestamp));
@@ -81,9 +81,8 @@ public class SnowflakeIdWorker {
                 //阻塞到下一个毫秒,获得新的时间戳
                 timestamp = tilNextMillis(lastTimestamp);
             }
-        }
-        //时间戳改变，毫秒内序列重置
-        else {
+        } else {
+            //时间戳改变，毫秒内序列重置
             sequence = 0L;
         }
         //上次生成ID的时间截
@@ -122,7 +121,8 @@ public class SnowflakeIdWorker {
             while (true){
                 long nextId =idWorker.nextId();
                 count++;
-                System.out.println(count+":"+nextId);
+                //注!!! 这句输出严重影响性能,在以后的开发中尽量少用
+                //System.out.println(count+":"+nextId);
             }
         };
         Thread thread=new Thread(runnable);
