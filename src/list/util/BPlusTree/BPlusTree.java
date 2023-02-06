@@ -12,7 +12,7 @@ public class BPlusTree {
     /**
      * B+树的阶数
      */
-    private int rank;
+    private final int rank;
     /**
      * 根节点
      */
@@ -22,7 +22,7 @@ public class BPlusTree {
      */
     private Node head;
 
-    BPlusTree(int rank) {
+    public BPlusTree(int rank) {
         this.rank = rank;
     }
 
@@ -56,7 +56,8 @@ public class BPlusTree {
                     break;
                 }
                 //如果当前节点是最后一个节点或者要插入的键值对的键的值小于下一个节点的键的最小值，则直接插入当前节点
-                if (node.getNextNode() == null || node.getNextNode().getKeyAndValue().get(0).getKey() >= entry.getKey()) {
+                if (node.getNextNode() == null ||
+                        node.getNextNode().getKeyAndValue().get(0).getKey() >= entry.getKey()) {
                     splidNode(node, entry);
                     break;
                 }
@@ -65,8 +66,6 @@ public class BPlusTree {
             }
         }
     }
-
-
     //判断是否需要拆分节点
     private void splidNode(Node node, KeyAndValue addkeyAndValue) {
         List<KeyAndValue> keyAndValues = node.getKeyAndValue();

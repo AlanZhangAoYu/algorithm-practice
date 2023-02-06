@@ -5,7 +5,6 @@ import java.util.List;
  * @author ZAY
  * 节点类
  */
-
 public class Node {
     /**
      *节点的子节点

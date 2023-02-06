@@ -3,13 +3,9 @@ package list.util.BPlusTree;
  * @author ZAY
  */
 public class KeyAndValue implements Comparable<KeyAndValue>{
-    /**
-     *  存储索引关键字
-     */
-     private int key;
-     /**
-     *存储数据
-     */
+    /**存储索引关键字*/
+    private int key;
+    /**存储数据*/
     private Object value;
 
     @Override
